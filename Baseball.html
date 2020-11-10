@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Number Baseball Game</title>
+<style>
+	button {
+		color: white;
+		background-color: #4CAF50;
+		width: 100px;
+		height: 30px;
+	}
+	#container {
+		width: 400px;
+		padding-left: 40%;
+		padding-right: 30%;
+	}
+</style>
+</head>
+<body>
+
+<div id="container">
+	<h1>Play Number Baseball!</h1>
+	<button id="startBtn" onclick="startGame()">Start Game</button>
+	<div id="guesses">
+		<p>Your Guesses:</p>
+		<ul id="numList">
+  
+		</ul>
+	</div>
+	<div id="guessInput">
+		<p>Guess the Number:</p>
+		<input id="numInput" type="number"/>
+		<button onclick="check()">Enter</button>
+	</div>
+
+	<div id="success">
+		<h4 id="congrats"></h4>
+		<button onclick="playAgain()">Play Again</button>
+	</div>
+</div>
+
+<script>
+	var secretNum = [0,0,0,0];
+	var guessCount = 0;
+	document.getElementById("guesses").style.display = "none";
+	document.getElementById("guessInput").style.display = "none";
+	document.getElementById("success").style.display = "none";
+	function getRandom() {
+		return Math.floor(Math.random() * 10);
+	}
+	function startGame() {
+		document.getElementById("guessInput").style.display = "block";
+		document.getElementById("startBtn").style.display = "none";
+		secretNum[0] = getRandom();
+		secretNum[1] = getRandom();
+		while(secretNum[1] == secretNum[0]) {
+			secretNum[1] = getRandom();
+		}
+		secretNum[2] = getRandom();
+		while(secretNum[2] == secretNum[0] || secretNum[2] == secretNum[1]) {
+			secretNum[2] = getRandom();
+		}
+		secretNum[3] = getRandom();
+		while(secretNum[3] == secretNum[0] || secretNum[3] == secretNum[1] || secretNum[3] == secretNum[2]) {
+			secretNum[3] = getRandom();
+		}
+		guessCount = 0;
+		var num = secretNum[0] + " " + secretNum[1] + " " + secretNum[2] + " " + secretNum[3];
+		console.log(num);
+	}
+	function playAgain() {
+		var list = document.getElementById("numList");
+		while (list.hasChildNodes()) {  
+		  list.removeChild(list.firstChild);
+		}
+		document.getElementById("guesses").style.display = "none";
+		document.getElementById("guessInput").style.display = "none";
+		document.getElementById("success").style.display = "none";
+		startGame();
+	}
+	function check() {
+		guessCount++;
+		document.getElementById("guesses").style.display = "block";
+		var numbers = document.getElementById("numInput").value;
+		var s = 0;
+		var b = 0;
+		for(var i = 0; i < 4; i++) {
+			for(var j = 0; j < 4; j++) {
+				if(secretNum[i] == parseInt(numbers[j])) {
+					if(i == j) {
+						s++;
+					}
+					else {
+						b++;
+					}
+				}
+			}
+		}
+		
+		var node = document.createElement("LI");
+		var msg = numbers;
+		msg += " - strike:";
+		msg += s;
+		msg += ", ball:";
+		msg += b;
+		var textnode = document.createTextNode(msg);
+		node.appendChild(textnode);
+		document.getElementById("numList").appendChild(node);
+		document.getElementById("numInput").value = "";
+		if(s == 4) {
+			var msg = "Congratulations!!! You have guessed in ";
+			msg += guessCount;
+			msg += " steps!!!";
+			document.getElementById("guessInput").style.display = "none";
+			document.getElementById("success").style.display = "block";
+			document.getElementById("congrats").innerHTML = msg;
+		}
+	}
+</script>
+</body>
+</html>
